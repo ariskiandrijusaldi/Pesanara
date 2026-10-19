@@ -1,47 +1,35 @@
-<laravel-boost-guidelines>
-# Laravel Application
+# AGENTS.md
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+Laravel 13 app — stock `laravel/laravel` skeleton, single package (no monorepo), no custom code yet (welcome route, example tests only). PHP ^8.3, PHPUnit 12, Vite 8 + Tailwind 4, SQLite, composer scripts + npm. Dev shell here is Windows/PowerShell.
 
-## Prerequisites
-
-Verify that PHP and Composer are available:
+## Setup (fresh clone)
 
 ```sh
-php -v
-composer -V
+composer setup
 ```
 
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
+Runs: `composer install` -> copy `.env.example` -> `key:generate` -> `migrate --force` -> `npm install --ignore-scripts` -> `npm run build`.
 
-macOS:
+Gotcha: `database/database.sqlite` is not committed and `setup` does NOT create it — `migrate` throws `SQLiteDatabaseDoesNotExistException` until it exists:
 
 ```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
+php -r "touch('database/database.sqlite');"
 ```
 
-Windows PowerShell:
+## Commands
 
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
+- `vendor/bin/pint` — formatter (Pint, default Laravel preset; no `pint.json`, no composer script, no CI). Run before finishing.
+- `composer test` — runs `config:clear`, then `php artisan test`. Single test: `php artisan test --filter=<name>` or pass a path (`php artisan test tests/Feature/ExampleTest.php`).
+- Verification loop is pint -> test. No static analysis (PHPStan is not a direct dependency), no CI workflows, no git hooks.
+- `composer dev` — `php artisan dev`: `serve` + `queue:listen` + Vite in one multiplexed view (via `concurrently` on Windows — that is why it is in package.json). Needs `.env`, `vendor/`, `node_modules/`.
+- `npm run dev` / `npm run build` — Vite only.
 
-Linux:
+## Testing quirks
 
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
+- `phpunit.xml` pins tests to SQLite `:memory:`, array cache/session, sync queue — tests never read your `.env` DB or touch `database/database.sqlite`. Use `RefreshDatabase` for DB tests.
+- `composer test` clears `bootstrap/cache/config.php` first so cached `.env` values cannot override phpunit.xml env vars. If you run `vendor/bin/phpunit` directly, clear config yourself after changing `.env`.
+- `laravel/pao` (dev dep) rewrites test output for detected AI agents — expect machine-oriented output instead of normal PHPUnit rendering.
 
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
+## Notes
 
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+- README and `CLAUDE.md` direct agents to install Laravel Boost (`composer require laravel/boost --dev && php artisan boost:install`). Warning: `boost:install` regenerates this file.
