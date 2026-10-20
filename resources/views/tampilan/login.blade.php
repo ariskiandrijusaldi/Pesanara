@@ -5,13 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Login — HQ Coffee & Bites</title>
 
+        <script>document.documentElement.classList.add('js');</script>
+
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
     <body class="grid min-h-screen place-items-center bg-[#FAFAFC] px-5 py-10 font-sans text-slate-600 antialiased">
 
-        <main class="w-full max-w-md rounded-3xl border border-[#ECE9F6] bg-white p-6 shadow-[0_16px_40px_rgba(49,24,107,0.08)] sm:p-8">
+        <main class="reveal w-full max-w-md rounded-3xl border border-[#ECE9F6] bg-white p-6 shadow-[0_16px_40px_rgba(49,24,107,0.08)] sm:p-8">
 
             {{-- Badge brand --}}
             <div class="flex justify-center">

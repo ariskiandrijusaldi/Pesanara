@@ -7,6 +7,8 @@
         <title>Pesanara — Pesan Lebih Mudah, Nikmati Lebih Nyaman</title>
         <meta name="description" content="Pesanara memudahkan kamu memesan menu favorit tanpa antre. Cepat, praktis, dan nyaman.">
 
+        <script>document.documentElement.classList.add('js');</script>
+
         @fonts
 
         {{-- Styles / Scripts (Langsung panggil @vite agar Tailwind CSS dimuat) --}}
@@ -14,7 +16,7 @@
     </head>
     <body class="overflow-x-hidden bg-[#FAFAFC] font-sans text-slate-600 antialiased">
         {{-- ===================== NAVBAR ===================== --}}
-        <header class="sticky top-0 z-40 border-b border-[#ECE9F6] bg-white/85 backdrop-blur-md">
+        <header class="site-header sticky top-0 z-40 border-b border-[#ECE9F6] bg-white/85 backdrop-blur-md">
             <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-6 lg:px-8" aria-label="Navigasi utama">
                 <a href="#beranda" class="flex shrink-0 items-center gap-2.5">
                     <span class="grid h-9 w-9 place-items-center rounded-xl bg-[#7C3AED] text-white shadow-md shadow-[#7C3AED]/30">
@@ -76,32 +78,34 @@
             </nav>
 
             {{-- Mobile menu --}}
-            <div id="nav-mobile-menu" class="hidden border-t border-[#ECE9F6] bg-white lg:hidden">
-                <div class="mx-auto max-w-6xl px-5 py-4 sm:px-6">
-                    <ul class="space-y-1">
-                        <li><a href="#beranda" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Beranda</a></li>
-                        <li><a href="#profil" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Profil</a></li>
-                        <li><a href="#menu" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Menu</a></li>
-                        <li><a href="#fasilitas" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Fasilitas</a></li>
-                        <li><a href="#lokasi" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Lokasi</a></li>
-                    </ul>
+            <div id="nav-mobile-menu" class="nav-mobile">
+                <div class="border-t border-[#ECE9F6] bg-white">
+                    <div class="mx-auto max-w-6xl px-5 py-4 sm:px-6">
+                        <ul class="space-y-1">
+                            <li><a href="#beranda" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Beranda</a></li>
+                            <li><a href="#profil" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Profil</a></li>
+                            <li><a href="#menu" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Menu</a></li>
+                            <li><a href="#fasilitas" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Fasilitas</a></li>
+                            <li><a href="#lokasi" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Lokasi</a></li>
+                        </ul>
 
-                    <a href="#menu" class="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]">
-                        Mulai Pesan
-                    </a>
+                        <a href="#menu" class="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]">
+                            Mulai Pesan
+                        </a>
 
-                    @if (Route::has('login'))
-                        <div class="mt-3 flex items-center justify-center gap-3 border-t border-[#ECE9F6] pt-3">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-[#1B1338]">Dashboard</a>
-                            @else
-                                <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700">Masuk</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="text-sm font-medium text-[#6D28D9]">Daftar</a>
-                                @endif
-                            @endauth
-                        </div>
-                    @endif
+                        @if (Route::has('login'))
+                            <div class="mt-3 flex items-center justify-center gap-3 border-t border-[#ECE9F6] pt-3">
+                                @auth
+                                    <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-[#1B1338]">Dashboard</a>
+                                @else
+                                    <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700">Masuk</a>
+                                    @if (Route::has('register'))
+                                        <a href="{{ route('register') }}" class="text-sm font-medium text-[#6D28D9]">Daftar</a>
+                                    @endif
+                                @endauth
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </header>
@@ -115,20 +119,20 @@
                     <div class="absolute -bottom-24 -right-12 h-72 w-72 rounded-full bg-[#4F46E5] opacity-30 blur-3xl" aria-hidden="true"></div>
 
                     <div class="relative mx-auto max-w-3xl">
-                        <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-purple-100">
+                        <span class="reveal inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-purple-100">
                             <span class="h-1.5 w-1.5 rounded-full bg-[#A78BFA]"></span>
                             Pesan online tanpa antre
                         </span>
 
-                        <h1 class="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <h1 class="reveal mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl" style="--reveal-delay: 80ms">
                             Pesan Lebih Mudah, Nikmati Lebih Nyaman
                         </h1>
 
-                        <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+                        <p class="reveal mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg" style="--reveal-delay: 160ms">
                             Pesan menu favoritmu lewat Pesanara — cepat, praktis, dan siap dinikmati tanpa harus mengantre.
                         </p>
 
-                        <div class="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+                        <div class="reveal mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4" style="--reveal-delay: 240ms">
                             <a href="#menu" class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B5CF6] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#7C3AED]/30 transition hover:bg-[#7C3AED]">
                                 Mulai Pesan
                                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -142,7 +146,7 @@
                     </div>
 
                     {{-- Kartu status pesanan --}}
-                    <div class="absolute bottom-8 left-8 hidden items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-xl lg:flex">
+                    <div class="reveal animate-float absolute bottom-8 left-8 hidden items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-xl lg:flex" style="--reveal-delay: 400ms">
                         <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#EDE9FE] text-[#7C3AED]">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <circle cx="12" cy="12" r="9" />
@@ -160,7 +164,7 @@
             {{-- ===================== PROFIL & KEUNGGULAN ===================== --}}
             <section id="profil" class="scroll-mt-20 px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
                 <div class="mx-auto max-w-6xl">
-                    <div class="mx-auto max-w-2xl text-center">
+                    <div class="reveal mx-auto max-w-2xl text-center">
                         <span class="inline-flex items-center rounded-full bg-[#EDE9FE] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#6D28D9]">
                             Keunggulan
                         </span>
@@ -172,7 +176,7 @@
                         </p>
                     </div>
 
-                    <div id="fasilitas" class="mt-12 grid scroll-mt-24 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div id="fasilitas" class="reveal stagger mt-12 grid scroll-mt-24 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         <article class="rounded-2xl border border-[#ECE9F6] bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(49,24,107,0.10)]">
                             <span class="grid h-11 w-11 place-items-center rounded-xl bg-[#EDE9FE] text-[#7C3AED]">
                                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -228,7 +232,7 @@
 
             <section id="menu" class="scroll-mt-20 border-y border-[#ECE9F6] bg-white px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
                 <div class="mx-auto max-w-6xl">
-                    <div class="mx-auto max-w-2xl text-center">
+                    <div class="reveal mx-auto max-w-2xl text-center">
                         <span class="inline-flex items-center rounded-full bg-[#EDE9FE] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#6D28D9]">
                             Produk
                         </span>
@@ -240,7 +244,7 @@
                         </p>
                     </div>
 
-                    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="reveal stagger mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         @foreach ($menuFavorit as $item)
                             <article class="group overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(49,24,107,0.10)]">
                                 <div class="grid aspect-[4/3] place-items-center bg-gradient-to-b from-[#F1ECFE] to-[#F8F6FF]">
@@ -274,7 +278,7 @@
             {{-- ===================== LOKASI & INFORMASI ===================== --}}
             <section id="lokasi" class="scroll-mt-20 px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
                 <div class="mx-auto max-w-6xl">
-                    <div class="mx-auto max-w-2xl text-center">
+                    <div class="reveal mx-auto max-w-2xl text-center">
                         <span class="inline-flex items-center rounded-full bg-[#EDE9FE] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#6D28D9]">
                             Lokasi
                         </span>
@@ -286,7 +290,7 @@
                         </p>
                     </div>
 
-                    <div class="mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+                    <div class="reveal stagger mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
                         {{-- Peta lokasi --}}
                         <div
                             class="relative min-h-[300px] overflow-hidden rounded-2xl border border-[#ECE9F6] bg-[#EEF0F8] shadow-sm sm:min-h-[360px] lg:min-h-[420px]"
@@ -378,7 +382,7 @@
 
         {{-- ===================== FOOTER ===================== --}}
         <footer class="bg-[#171043] text-purple-100/70">
-            <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+            <div class="reveal stagger mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
                 <div>
                     <a href="#beranda" class="flex items-center gap-2.5">
                         <span class="grid h-9 w-9 place-items-center rounded-xl bg-[#7C3AED] text-white">
@@ -441,10 +445,19 @@
                 const mobileMenu = document.getElementById('nav-mobile-menu');
 
                 if (navToggle && mobileMenu) {
+                    const setMenuOpen = function (open) {
+                        navToggle.setAttribute('aria-expanded', String(open));
+                        mobileMenu.classList.toggle('is-open', open);
+                    };
+
                     navToggle.addEventListener('click', function () {
-                        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-                        navToggle.setAttribute('aria-expanded', !isExpanded);
-                        mobileMenu.classList.toggle('hidden');
+                        setMenuOpen(navToggle.getAttribute('aria-expanded') !== 'true');
+                    });
+
+                    mobileMenu.querySelectorAll('a').forEach(function (link) {
+                        link.addEventListener('click', function () {
+                            setMenuOpen(false);
+                        });
                     });
                 }
             });

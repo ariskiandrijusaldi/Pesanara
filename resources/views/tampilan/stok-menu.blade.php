@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Update Stok Menu — HQ Coffee & Bites</title>
 
+        <script>document.documentElement.classList.add('js');</script>
+
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -76,12 +78,12 @@
         <main class="mx-auto max-w-6xl px-5 py-8 sm:px-6 lg:px-8">
 
             {{-- ===================== JUDUL ===================== --}}
-            <div class="flex items-center gap-2">
+            <div class="reveal flex items-center gap-2">
                 <span class="rounded-full bg-[#EDE9FE] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#6D28D9]">Inventaris Live Menu</span>
                 <span class="text-xs text-slate-500">Terminal Kasir v2.4</span>
             </div>
-            <h1 class="mt-3 text-4xl font-bold tracking-tight text-[#1B1338] sm:text-5xl">Update Stok Menu</h1>
-            <p class="mt-3 max-w-md text-sm leading-relaxed text-slate-500">
+            <h1 class="reveal mt-3 text-4xl font-bold tracking-tight text-[#1B1338] sm:text-5xl" style="--reveal-delay: 80ms">Update Stok Menu</h1>
+            <p class="reveal mt-3 max-w-md text-sm leading-relaxed text-slate-500" style="--reveal-delay: 160ms">
                 Sinkronisasi real-time langsung ke smartphone pemesanan QR pelanggan di setiap meja dalam hitungan milidetik.
             </p>
 
@@ -94,7 +96,7 @@
             </div>
 
             {{-- ===================== KARTU RINGKASAN ===================== --}}
-            <section class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Ringkasan stok">
+            <section class="reveal stagger mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Ringkasan stok">
                 <article class="rounded-2xl border border-[#ECE9F6] bg-white p-5 shadow-sm">
                     <div class="flex items-start justify-between">
                         <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Menu Aktif</p>

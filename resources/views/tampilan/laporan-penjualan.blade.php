@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Laporan Penjualan — HQ Coffee & Bites</title>
 
+        <script>document.documentElement.classList.add('js');</script>
+
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -84,7 +86,7 @@
 
             {{-- ===================== JUDUL & AKSI ===================== --}}
             <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div>
+                <div class="reveal">
                     <p class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6D28D9]">
                         <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18M7 15l4-4 3 3 5-6" /></svg>
                         Owner Financial Overview
@@ -93,7 +95,7 @@
                     <p class="mt-2 text-sm text-slate-500">Tinjauan omzet bersih dan performa penjualan 100% cashless QRIS.</p>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-1 self-start rounded-xl border border-[#ECE9F6] bg-white p-1 shadow-sm lg:self-auto" id="period-tabs">
+                <div class="reveal flex flex-wrap items-center gap-1 self-start rounded-xl border border-[#ECE9F6] bg-white p-1 shadow-sm lg:self-auto" id="period-tabs" style="--reveal-delay: 80ms">
                     <button type="button" data-period="harian" class="period-btn inline-flex items-center gap-1.5 rounded-lg bg-[#F3F0FD] px-3 py-1.5 text-xs font-semibold text-[#6D28D9]">
                         <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>
                         Laporan Harian
@@ -111,7 +113,7 @@
             </div>
 
             {{-- ===================== KARTU RINGKASAN ===================== --}}
-            <section class="mt-8 grid gap-4 md:grid-cols-3" aria-label="Ringkasan hari ini">
+            <section class="reveal stagger mt-8 grid gap-4 md:grid-cols-3" aria-label="Ringkasan hari ini">
                 <article class="rounded-2xl border border-[#ECE9F6] bg-white p-5 shadow-sm">
                     <div class="flex items-start justify-between">
                         <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Omzet Hari Ini</p>

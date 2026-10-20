@@ -6,4 +6,138 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --animate-float: float 6s ease-in-out infinite;
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+}
+
+/* ===================== Smooth scrolling ===================== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ===================== Scroll reveal ===================== */
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(1.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mode tunggal: elemen itu sendiri yang muncul. */
+.js .reveal:not(.stagger) {
+    opacity: 0;
+}
+
+.js .reveal:not(.stagger).is-visible {
+    animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal.reveal-done {
+    opacity: 1;
+}
+
+/* Mode bertahap: anak-anak elemen muncul satu per satu. */
+.js .reveal.stagger > * {
+    opacity: 0;
+}
+
+.js .reveal.stagger.is-visible > * {
+    animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.js .reveal.stagger.is-visible > *:nth-child(2) {
+    animation-delay: 90ms;
+}
+
+.js .reveal.stagger.is-visible > *:nth-child(3) {
+    animation-delay: 180ms;
+}
+
+.js .reveal.stagger.is-visible > *:nth-child(4) {
+    animation-delay: 270ms;
+}
+
+.js .reveal.stagger.is-visible > *:nth-child(5) {
+    animation-delay: 360ms;
+}
+
+.js .reveal.stagger.is-visible > *:nth-child(n + 6) {
+    animation-delay: 450ms;
+}
+
+.js .reveal.stagger.reveal-done > * {
+    opacity: 1;
+}
+
+/* ===================== Header sticky ===================== */
+.site-header {
+    transition: box-shadow 0.3s ease;
+}
+
+.site-header.is-scrolled {
+    box-shadow: 0 8px 24px rgba(23, 16, 67, 0.08);
+}
+
+/* ===================== Menu mobile (buka/tutup halus) ===================== */
+.nav-mobile {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-mobile > div {
+    overflow: hidden;
+    min-height: 0;
+    visibility: hidden;
+    transition: visibility 0s linear 0.3s;
+}
+
+.nav-mobile.is-open > div {
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.nav-mobile.is-open {
+    grid-template-rows: 1fr;
+}
+
+@media (min-width: 64rem) {
+    .nav-mobile {
+        display: none;
+    }
+}
+
+/* ===================== Hormati preferensi gerak minimal ===================== */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .js .reveal,
+    .js .reveal > * {
+        opacity: 1 !important;
+    }
 }
