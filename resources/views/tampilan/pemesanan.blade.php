@@ -7,6 +7,8 @@
         <title>Self-Order — HQ Coffee | Pesanara</title>
         <meta name="description" content="Pesan menu HQ Coffee langsung dari meja kamu. Self-order cepat, bayar QRIS, tanpa antre.">
 
+        <script>document.documentElement.classList.add('js');</script>
+
         @fonts
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -14,7 +16,7 @@
 
     <body class="bg-[#FAFAFC] font-sans text-slate-600 antialiased">
         {{-- ===================== TOP BAR ===================== --}}
-        <header class="sticky top-0 z-40 border-b border-[#ECE9F6] bg-white/90 backdrop-blur-md">
+        <header class="site-header sticky top-0 z-40 border-b border-[#ECE9F6] bg-white/90 backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-8">
                 {{-- Logo / Nomor Meja --}}
                 <div class="flex items-center gap-3">
@@ -76,7 +78,7 @@
                 </div>
 
                 {{-- Banner Promo (Combo Hemat Meja) --}}
-                <section class="relative mt-5 overflow-hidden rounded-3xl bg-gradient-to-br from-[#7C3AED] to-[#4F46E5] p-6 text-white shadow-lg shadow-[#7C3AED]/25 sm:p-7">
+                <section class="reveal relative mt-5 overflow-hidden rounded-3xl bg-gradient-to-br from-[#7C3AED] to-[#4F46E5] p-6 text-white shadow-lg shadow-[#7C3AED]/25 sm:p-7">
                     <div class="absolute -right-10 -top-12 h-44 w-44 rounded-full bg-white/10 blur-2xl" aria-hidden="true"></div>
                     <div class="absolute -bottom-14 left-16 h-40 w-40 rounded-full bg-white/10 blur-2xl" aria-hidden="true"></div>
 
@@ -202,7 +204,7 @@
                     ];
                 @endphp
 
-                <div id="product-grid" class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div id="product-grid" class="reveal stagger mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
                     @foreach ($produk as $item)
                         <article
                             class="product-card group flex flex-col overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(49,24,107,0.10)]"
