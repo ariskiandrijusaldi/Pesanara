@@ -51,18 +51,27 @@
                     </span>
                     <span class="leading-tight">
                         <span class="block text-sm font-bold text-[#1B1338]">HQ Coffee &amp; Bites</span>
-                        <span class="block text-[10px] font-semibold uppercase tracking-wider text-[#7C3AED]">Kasir &amp; Operasional</span>
+                        <span class="block text-[10px] font-semibold uppercase tracking-wider text-[#7C3AED]">{{ auth()->user()->role === 'owner' ? 'Owner & Manajemen Menu' : 'Kasir & Operasional' }}</span>
                     </span>
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <a href="{{ route('kasir-order-monitor') }}" class="hidden items-center gap-1.5 rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD] sm:inline-flex">
-                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        Order Monitor
-                    </a>
+                    @if(auth()->user()->role === 'owner')
+                        <a href="{{ route('laporan-penjualan') }}" class="hidden items-center gap-1.5 rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD] sm:inline-flex">
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 3v18h18M7 15l4-4 3 3 5-6" />
+                            </svg>
+                            Laporan Penjualan
+                        </a>
+                    @else
+                        <a href="{{ route('kasir-order-monitor') }}" class="hidden items-center gap-1.5 rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD] sm:inline-flex">
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            Order Monitor
+                        </a>
+                    @endif
                     <button type="button" class="rounded-full bg-[#7C3AED] px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-[#6D28D9]">
                         Tutup Shift
                     </button>
@@ -81,7 +90,7 @@
                         </span>
                         <span class="hidden text-right leading-tight sm:block">
                             <span class="block text-xs font-semibold text-[#1B1338]">{{ auth()->user()->name }}</span>
-                            <span class="block text-[10px] text-slate-500">Kasir</span>
+                            <span class="block text-[10px] text-slate-500 capitalize">{{ auth()->user()->role }}</span>
                         </span>
                     </div>
                 </div>

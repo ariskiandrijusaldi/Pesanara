@@ -15,6 +15,14 @@
 
         <main class="reveal w-full max-w-md rounded-3xl border border-[#ECE9F6] bg-white p-6 shadow-[0_16px_40px_rgba(49,24,107,0.08)] sm:p-8">
 
+            {{-- Tombol kembali ke landing page --}}
+            <a href="{{ route('landing') }}" class="mb-5 inline-flex items-center gap-2 rounded-full border border-[#E4DFF3] bg-white px-3.5 py-2 text-xs font-bold text-[#6D28D9] shadow-sm transition hover:bg-[#F3F0FD]">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                Kembali ke Beranda HQ Coffee
+            </a>
+
             {{-- Badge brand --}}
             <div class="flex justify-center">
                 <a href="{{ route('landing') }}" class="inline-flex items-center gap-2 rounded-full border border-[#E4DFF3] bg-[#F3F0FD] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#6D28D9] transition hover:bg-[#EDE9FE]">
