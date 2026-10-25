@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Kasir &amp; Order Monitor - HQ Coffee &amp; Bites</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <script>document.documentElement.classList.add('js');</script>
 
@@ -43,7 +44,7 @@
                 <div class="bg-indigo-600 text-white p-1.5 rounded-lg font-bold">HQ</div>
                 <div>
                     <h1 class="font-bold text-sm text-gray-900">HQ Coffee &amp; Bites</h1>
-                    <span class="text-[10px] text-indigo-600 font-medium">KASIR &amp; ORDER MONITOR (DINE-IN ONLY)</span>
+                    <span class="text-[10px] text-indigo-600 font-medium">KASIR &amp; ORDER MONITOR (DINE-IN &amp; TAKEAWAY)</span>
                 </div>
             </div>
 
@@ -76,7 +77,7 @@
                         <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl"><i class="fa-solid fa-chair text-lg"></i></div>
                         <div>
                             <span class="text-gray-400 font-semibold block">PESANAN AKTIF</span>
-                            <span class="text-xl font-black text-gray-900">6 <span class="text-xs font-normal text-gray-500">Meja</span></span>
+                            <span id="stat-aktif" class="text-xl font-black text-gray-900">{{ $counts['aktif'] }} <span class="text-xs font-normal text-gray-500">Order</span></span>
                         </div>
                     </div>
                     <span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">Live</span>
@@ -87,7 +88,7 @@
                         <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i class="fa-solid fa-receipt text-lg"></i></div>
                         <div>
                             <span class="text-gray-400 font-semibold block">MENUNGGU VERIFIKASI</span>
-                            <span class="text-xl font-black text-gray-900">2 <span class="text-xs font-normal text-gray-500">Meja</span></span>
+                            <span id="stat-verifikasi" class="text-xl font-black text-gray-900">{{ $counts['verifikasi'] }} <span class="text-xs font-normal text-gray-500">Order</span></span>
                         </div>
                     </div>
                     <span class="bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded text-[10px]">Perlu Cek</span>
@@ -98,7 +99,7 @@
                         <div class="p-3 bg-purple-50 text-purple-600 rounded-xl"><i class="fa-solid fa-utensils text-lg"></i></div>
                         <div>
                             <span class="text-gray-400 font-semibold block">DIPROSES DAPUR</span>
-                            <span class="text-xl font-black text-gray-900">3 <span class="text-xs font-normal text-gray-500">Meja</span></span>
+                            <span id="stat-dapur" class="text-xl font-black text-gray-900">{{ $counts['dapur'] }} <span class="text-xs font-normal text-gray-500">Order</span></span>
                         </div>
                     </div>
                     <span class="bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded text-[10px]">Memasak</span>
@@ -109,7 +110,7 @@
                         <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i class="fa-solid fa-circle-check text-lg"></i></div>
                         <div>
                             <span class="text-gray-400 font-semibold block">SELESAI HARI INI</span>
-                            <span class="text-xl font-black text-gray-900">48 <span class="text-xs font-normal text-gray-500">Order</span></span>
+                            <span id="stat-selesai" class="text-xl font-black text-gray-900">{{ $counts['selesai'] }} <span class="text-xs font-normal text-gray-500">Order</span></span>
                         </div>
                     </div>
                     <span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">100% Lunas</span>
@@ -118,17 +119,23 @@
 
             <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-gray-100">
                 <div id="status-tabs" class="flex flex-wrap items-center gap-2">
-                    <button type="button" data-filter="semua" class="status-btn bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Semua <span class="bg-white text-indigo-600 px-1.5 py-0.5 rounded-full text-[10px]">8</span></button>
-                    <button type="button" data-filter="verifikasi" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><span class="inline-block w-1.5 h-1.5 bg-amber-500 rounded-full mr-1"></span>Menunggu Verifikasi <span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full text-[10px]">2</span></button>
-                    <button type="button" data-filter="dapur" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><i class="fa-solid fa-utensils mr-1"></i>Diproses Dapur <span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full text-[10px]">3</span></button>
-                    <button type="button" data-filter="siap" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><i class="fa-solid fa-bell-concierge mr-1"></i>Siap Diantar <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full text-[10px]">1</span></button>
+                    <button type="button" data-filter="semua" class="status-btn bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Semua <span id="badge-semua" class="bg-white text-indigo-600 px-1.5 py-0.5 rounded-full text-[10px]">{{ $counts['total'] }}</span></button>
+                    <button type="button" data-filter="verifikasi" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><span class="inline-block w-1.5 h-1.5 bg-amber-500 rounded-full mr-1"></span>Menunggu Verifikasi <span id="badge-verifikasi" class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full text-[10px]">{{ $counts['verifikasi'] }}</span></button>
+                    <button type="button" data-filter="dapur" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><i class="fa-solid fa-utensils mr-1"></i>Diproses Dapur <span id="badge-dapur" class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full text-[10px]">{{ $counts['dapur'] }}</span></button>
+                    <button type="button" data-filter="siap" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><i class="fa-solid fa-bell-concierge mr-1"></i>Siap Diantar / Dipanggil <span id="badge-siap" class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full text-[10px]">{{ $counts['siap'] }}</span></button>
                     <button type="button" data-filter="selesai" class="status-btn bg-gray-50 text-gray-600 hover:bg-gray-100 font-medium px-3 py-1.5 rounded-xl border border-gray-100"><i class="fa-regular fa-circle-check mr-1"></i>Selesai</button>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
+                    <div id="type-toggle" class="bg-gray-100 p-1 rounded-xl flex space-x-1">
+                        <button type="button" data-type="semua" class="type-btn bg-white font-bold px-2.5 py-1 rounded-lg shadow-sm">Semua</button>
+                        <button type="button" data-type="dine-in" class="type-btn text-gray-500 font-medium px-2.5 py-1 rounded-lg"><i class="fa-solid fa-utensils mr-1"></i>Dine-in</button>
+                        <button type="button" data-type="takeaway" class="type-btn text-gray-500 font-medium px-2.5 py-1 rounded-lg"><i class="fa-solid fa-bag-shopping mr-1"></i>Takeaway</button>
+                    </div>
+
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
-                        <input id="order-search" type="text" placeholder="Cari no meja/cor..."
+                        <input id="order-search" type="text" placeholder="Cari no meja/cor/takeaway..."
                             class="pl-8 pr-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs w-48 focus:outline-none">
                     </div>
                     <div id="floor-toggle" class="bg-gray-100 p-1 rounded-xl flex space-x-1">
@@ -149,154 +156,7 @@
                     </div>
 
                     <div id="orders-list" class="space-y-4">
-
-                        {{-- MEJA 03 : menunggu verifikasi QRIS --}}
-                        <div class="order-card bg-white rounded-2xl p-4 border border-amber-200 shadow-sm space-y-3 cursor-pointer"
-                            data-status="verifikasi" data-floor="1" data-meja="03" data-order="#ORD-0845"
-                            data-pemesan="Hendra S." data-total="Rp 101.000"
-                            data-pay-status="pending" data-pay-time="10:40:55 WIB"
-                            data-pay-method="QRIS GPN (GoPay/BCA)" data-rrn="RRN-99203172681">
-                            <div class="flex flex-wrap justify-between items-start gap-2">
-                                <div class="flex items-center space-x-3">
-                                    <span class="card-meja bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-xl text-xs">MEJA 03</span>
-                                    <div>
-                                        <span class="card-order font-bold text-gray-900">#ORD-0845</span>
-                                        <span class="card-chip bg-amber-100 text-amber-800 font-bold text-[9px] px-2 py-0.5 rounded-full ml-2">PESANAN BARU</span>
-                                        <p class="text-[10px] text-gray-400 mt-0.5">1 menit yang lalu • 10:41 WIB • Pemesan: Hendra S.</p>
-                                    </div>
-                                </div>
-                                <span class="card-status bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-receipt mr-1"></i> Menunggu Verifikasi QRIS</span>
-                            </div>
-
-                            <div class="space-y-2 border-t border-b border-gray-50 py-3">
-                                <div class="flex justify-between font-medium">
-                                    <span>2x Kopi Susu Aren HQ <span class="block text-[10px] text-gray-400 font-normal">Catatan: 1 Less Sugar, 1 Normal Ice; Less Ice</span></span>
-                                    <span class="font-bold text-gray-800">Rp 44.000</span>
-                                </div>
-                                <div class="flex justify-between font-medium">
-                                    <span>1x Rice Bowl Ayam Teriyaki <span class="block text-[10px] text-gray-400 font-normal">Catatan: Telur 3/4 matang, sambal dipisah</span></span>
-                                    <span class="font-bold text-gray-800">Rp 35.000</span>
-                                </div>
-                                <div class="flex justify-between font-medium">
-                                    <span>1x Cinnamon Roll Homemade <span class="block text-[10px] text-gray-400 font-normal">Catatan: Panaskan hangat di microwave</span></span>
-                                    <span class="font-bold text-gray-800">Rp 22.000</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-indigo-50/50 p-2.5 rounded-xl flex flex-wrap justify-between items-center gap-2">
-                                <span class="text-indigo-700 font-semibold text-[11px]"><i class="fa-solid fa-receipt mr-1"></i> Bukti Bayar QRIS: <strong>Rp 101.000</strong></span>
-                                <button type="button" class="btn-cek-bukti bg-white border border-indigo-200 text-indigo-600 font-bold px-3 py-1 rounded-lg hover:bg-indigo-50"><i class="fa-solid fa-eye mr-1"></i> Cek Bukti QRIS</button>
-                            </div>
-
-                            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-                                <span class="font-bold text-sm">Total: <strong class="text-indigo-600 text-base">Rp 101.000</strong> <span class="text-gray-400 font-normal text-xs">(3 Item / 4 Porsi)</span></span>
-                                <div class="card-action flex space-x-2">
-                                    <button type="button" class="btn-tolak border border-rose-200 text-rose-600 font-bold px-3 py-1.5 rounded-xl hover:bg-rose-50"><i class="fa-regular fa-circle-xmark mr-1"></i> Tolak / Batal</button>
-                                    <button type="button" class="btn-cetak bg-indigo-600 text-white font-bold px-4 py-1.5 rounded-xl hover:bg-indigo-700"><i class="fa-solid fa-print mr-1"></i> Cetak Struk</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- MEJA 01 : diproses dapur --}}
-                        <div class="order-card bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3 cursor-pointer"
-                            data-status="dapur" data-floor="1" data-meja="01" data-order="#ORD-0842"
-                            data-pemesan="Barista Bar 1" data-total="Rp 77.000"
-                            data-pay-status="lunas" data-pay-time="10:33:20 WIB"
-                            data-pay-method="QRIS GPN (GoPay)" data-rrn="RRN-99203158442">
-                            <div class="flex flex-wrap justify-between items-start gap-2">
-                                <div class="flex items-center space-x-3">
-                                    <span class="card-meja bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-xl text-xs">MEJA 01</span>
-                                    <div>
-                                        <span class="card-order font-bold text-gray-900">#ORD-0842</span>
-                                        <span class="card-chip bg-purple-100 text-purple-800 font-bold text-[9px] px-2 py-0.5 rounded-full ml-2">DIPROSES DAPUR</span>
-                                        <p class="text-[10px] text-gray-400 mt-0.5">8 menit yang lalu • 10:34 WIB • Barista Bar 1</p>
-                                    </div>
-                                </div>
-                                <span class="card-status bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-check mr-1"></i> Lunas (QRIS Terverifikasi)</span>
-                            </div>
-
-                            <div class="space-y-2 border-t border-b border-gray-50 py-3">
-                                <div class="flex justify-between"><span>1x Sea Salt Latte (Normal Sweet)</span><span class="item-price text-gray-600">Rp 28.000</span></div>
-                                <div class="flex justify-between"><span>1x French Fries Truffle</span><span class="item-price text-gray-600">Rp 25.000</span></div>
-                                <div class="flex justify-between"><span>1x Thai Green Tea</span><span class="item-price text-gray-600">Rp 24.000</span></div>
-                            </div>
-
-                            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-                                <span class="font-bold text-sm">Total: <strong class="text-indigo-600 text-base">Rp 77.000</strong></span>
-                                <div class="card-action">
-                                    <button type="button" class="btn-advance bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-indigo-700">
-                                        Ubah ke: "Siap Diantar" <i class="fa-solid fa-bell ml-1"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- MEJA 07 : siap diantar --}}
-                        <div class="order-card bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3 cursor-pointer"
-                            data-status="siap" data-floor="2" data-meja="07" data-order="#ORD-0840"
-                            data-pemesan="Walter Standby" data-total="Rp 92.000"
-                            data-pay-status="lunas" data-pay-time="10:26:10 WIB"
-                            data-pay-method="Tunai (Kasir)" data-rrn="-">
-                            <div class="flex flex-wrap justify-between items-start gap-2">
-                                <div class="flex items-center space-x-3">
-                                    <span class="card-meja bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-xl text-xs">MEJA 07</span>
-                                    <div>
-                                        <span class="card-order font-bold text-gray-900">#ORD-0840</span>
-                                        <span class="card-chip bg-blue-100 text-blue-800 font-bold text-[9px] px-2 py-0.5 rounded-full ml-2">SIAP DIANTAR</span>
-                                        <p class="text-[10px] text-gray-400 mt-0.5">16 menit yang lalu • 10:26 WIB • Walter Standby</p>
-                                    </div>
-                                </div>
-                                <span class="card-status bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-money-bill-wave mr-1"></i> Lunas (Kasir Tunai)</span>
-                            </div>
-
-                            <div class="space-y-2 border-t border-b border-gray-50 py-3">
-                                <div class="flex justify-between"><span>2x Kopi Susu Aren HQ</span><span class="item-price text-gray-600">Rp 44.000</span></div>
-                                <div class="flex justify-between"><span>2x Croissant Butter Premium</span><span class="item-price text-gray-600">Rp 48.000</span></div>
-                            </div>
-
-                            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-                                <span class="font-bold text-sm">Total: <strong class="text-indigo-600 text-base">Rp 92.000</strong></span>
-                                <div class="card-action">
-                                    <button type="button" class="btn-finish bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-emerald-600">
-                                        <i class="fa-solid fa-circle-check mr-1"></i> Tandai 'Selesai' (Meja Bersih)
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- MEJA 05 : belum bayar (bayar di kasir) --}}
-                        <div class="order-card bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3 cursor-pointer"
-                            data-status="verifikasi" data-floor="2" data-meja="05" data-order="#ORD-0846"
-                            data-pemesan="Tamu Memilih Bayar di Kasir" data-total="Rp 60.000"
-                            data-pay-status="belum" data-pay-time="-"
-                            data-pay-method="Bayar di Kasir (Tunai / EDC)" data-rrn="-">
-                            <div class="flex flex-wrap justify-between items-start gap-2">
-                                <div class="flex items-center space-x-3">
-                                    <span class="card-meja bg-rose-100 text-rose-700 font-bold px-3 py-1 rounded-xl text-xs">MEJA 05</span>
-                                    <div>
-                                        <span class="card-order font-bold text-gray-900">#ORD-0846</span>
-                                        <span class="card-chip bg-rose-100 text-rose-800 font-bold text-[9px] px-2 py-0.5 rounded-full ml-2">BELUM BAYAR</span>
-                                        <p class="text-[10px] text-gray-400 mt-0.5">3 menit yang lalu • 10:39 WIB • Tamu Memilih Bayar di Kasir</p>
-                                    </div>
-                                </div>
-                                <span class="card-status bg-rose-100 text-rose-700 text-[10px] font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-hand-holding-dollar mr-1"></i> Pilih Bayar di Kasir</span>
-                            </div>
-
-                            <div class="space-y-2 border-t border-b border-gray-50 py-3">
-                                <div class="flex justify-between"><span>1x HQ Mixed Salad Bowl</span><span class="item-price text-gray-600">Rp 32.000</span></div>
-                                <div class="flex justify-between"><span>1x Chicken Wrap Tortilla</span><span class="item-price text-gray-600">Rp 28.000</span></div>
-                            </div>
-
-                            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-                                <span class="font-bold text-sm">Total: <strong class="text-indigo-600 text-base">Rp 60.000</strong></span>
-                                <div class="card-action">
-                                    <button type="button" class="btn-terima bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-indigo-700">
-                                        <i class="fa-solid fa-cash-register mr-1"></i> Terima Pembayaran Tunai / EDC di Kasir
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+                        @include('tampilan.partials.order-cards', ['orders' => $orders])
                     </div>
 
                     <p id="orders-empty" class="hidden text-center text-xs text-gray-400 bg-white rounded-2xl border border-gray-100 py-8">
@@ -319,7 +179,7 @@
 
                         <div class="bg-indigo-50/50 p-3 rounded-xl space-y-2 border border-indigo-100">
                             <div class="flex justify-between items-center">
-                                <span class="font-bold text-indigo-900 text-xs"><i class="fa-solid fa-shield-check mr-1"></i> VERIFIKASI BUKTI TRANSFER QRIS</span>
+                                <span id="pay-panel-title" class="font-bold text-indigo-900 text-xs"><i class="fa-solid fa-shield-check mr-1"></i> VERIFIKASI BUKTI TRANSFER QRIS</span>
                                 <span id="pay-match" class="text-emerald-600 font-bold text-xs">Cocok : Rp 101.000</span>
                             </div>
                             <div class="text-[10px] space-y-1 text-gray-500 pt-1 border-t border-indigo-100/60">
@@ -330,9 +190,14 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn-cetak w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl hover:bg-indigo-700 text-xs">
-                            <i class="fa-solid fa-print mr-1"></i> Cetak Struk
-                        </button>
+                        <div id="side-action-container" class="space-y-2">
+                            <button type="button" id="side-main-btn" class="btn-verif-qris w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl hover:bg-emerald-700 text-xs shadow-sm shadow-emerald-200 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-check text-sm"></i> Verifikasi QRIS &amp; Kirim ke Dapur
+                            </button>
+                            <button type="button" class="btn-cetak w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i class="fa-solid fa-print"></i> Cetak Struk
+                            </button>
+                        </div>
 
                         <div class="pt-2">
                             <span class="text-[10px] font-bold text-gray-400 block mb-2 uppercase">Alur Status Pesanan</span>
@@ -388,6 +253,12 @@
                     <div class="flex justify-between"><span class="text-gray-500">Nomor RRN / Ref:</span><span id="proof-rrn" class="font-semibold text-gray-700">RRN-99203172681</span></div>
                 </div>
                 <p id="proof-note" class="text-[10px] text-emerald-600 font-bold text-center">Nominal cocok dengan tagihan — silakan verifikasi & cetak struk.</p>
+                <div class="pt-2 flex space-x-2">
+                    <button type="button" id="btn-modal-close" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-xl text-xs">Tutup</button>
+                    <button type="button" id="btn-modal-verif" data-action="verifikasi" class="flex-1 btn-verif-qris bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-sm flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> Verifikasi QRIS
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -395,6 +266,10 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                const feedUrl = @json(route('kasir-order-monitor.feed'));
+                const ordersBaseUrl = @json(url('/orders'));
+
                 const toastEl = document.getElementById('hq-toast');
                 let toastTimer;
 
@@ -434,26 +309,52 @@
                 });
 
                 const ordersList = document.getElementById('orders-list');
-                const orderCards = Array.from(document.querySelectorAll('.order-card'));
                 const ordersEmpty = document.getElementById('orders-empty');
                 const statusBtns = document.querySelectorAll('.status-btn');
                 const floorBtns = document.querySelectorAll('.floor-btn');
+                const typeBtns = document.querySelectorAll('.type-btn');
                 const searchInput = document.getElementById('order-search');
                 let filterStatus = 'semua';
                 let filterFloor = 'semua';
+                let filterType = 'semua';
+                let currentCards = [];
+                let selectedCode = null;
+                let lastHtml = null;
+
+                const sideMeja = document.getElementById('side-meja');
+                const sideMeta = document.getElementById('side-meta');
+                const sideStatus = document.getElementById('side-status');
+                const payPanelTitle = document.getElementById('pay-panel-title');
+                const payMatch = document.getElementById('pay-match');
+                const payTime = document.getElementById('pay-time');
+                const payMethod = document.getElementById('pay-method');
+                const payRrn = document.getElementById('pay-rrn');
+                const payIntegrasi = document.getElementById('pay-integrasi');
+                const payIntegrasiRow = document.getElementById('pay-integrasi-row');
+                const stepper = document.getElementById('stepper');
+                const statusIndex = { verifikasi: 1, dapur: 2, siap: 3, selesai: 4, batal: 1 };
 
                 function terapkanFilter() {
                     const kata = searchInput.value.trim().toLowerCase();
                     let terlihat = 0;
-                    orderCards.forEach((card) => {
+
+                    currentCards.forEach((card) => {
                         const cocokStatus = filterStatus === 'semua' || card.dataset.status === filterStatus;
                         const cocokFloor = filterFloor === 'semua' || card.dataset.floor === filterFloor;
-                        const teksCari = ('meja ' + card.dataset.meja + ' ' + card.dataset.order + ' ' + card.dataset.pemesan).toLowerCase();
-                        const tampil = cocokStatus && cocokFloor && teksCari.includes(kata);
+                        const cocokType = filterType === 'semua' || card.dataset.type === filterType;
+                        const teksCari = ('meja ' + card.dataset.meja + ' ' + card.dataset.order + ' ' + card.dataset.pemesan + ' ' + card.dataset.type).toLowerCase();
+                        const tampil = cocokStatus && cocokFloor && cocokType && teksCari.includes(kata);
                         card.classList.toggle('hidden', !tampil);
                         if (tampil) terlihat++;
                     });
-                    ordersEmpty.classList.toggle('hidden', terlihat > 0);
+
+                    if (currentCards.length === 0) {
+                        ordersEmpty.textContent = 'Belum ada pesanan masuk. Pesanan pelanggan akan muncul otomatis di sini.';
+                        ordersEmpty.classList.remove('hidden');
+                    } else {
+                        ordersEmpty.textContent = 'Tidak ada pesanan yang cocok dengan filter saat ini.';
+                        ordersEmpty.classList.toggle('hidden', terlihat > 0);
+                    }
                 }
 
                 statusBtns.forEach((btn) => {
@@ -469,6 +370,21 @@
                             b.classList.toggle('font-medium', !aktif);
                             b.classList.toggle('border', !aktif);
                             b.classList.toggle('border-gray-100', !aktif);
+                        });
+                        terapkanFilter();
+                    });
+                });
+
+                typeBtns.forEach((btn) => {
+                    btn.addEventListener('click', function () {
+                        filterType = this.dataset.type;
+                        typeBtns.forEach((b) => {
+                            const aktif = b === this;
+                            b.classList.toggle('bg-white', aktif);
+                            b.classList.toggle('font-bold', aktif);
+                            b.classList.toggle('shadow-sm', aktif);
+                            b.classList.toggle('text-gray-500', !aktif);
+                            b.classList.toggle('font-medium', !aktif);
                         });
                         terapkanFilter();
                     });
@@ -491,18 +407,6 @@
 
                 searchInput.addEventListener('input', terapkanFilter);
 
-                const sideMeja = document.getElementById('side-meja');
-                const sideMeta = document.getElementById('side-meta');
-                const sideStatus = document.getElementById('side-status');
-                const payMatch = document.getElementById('pay-match');
-                const payTime = document.getElementById('pay-time');
-                const payMethod = document.getElementById('pay-method');
-                const payRrn = document.getElementById('pay-rrn');
-                const payIntegrasi = document.getElementById('pay-integrasi');
-                const payIntegrasiRow = document.getElementById('pay-integrasi-row');
-                const stepper = document.getElementById('stepper');
-                const statusIndex = { verifikasi: 1, dapur: 2, siap: 3, selesai: 4 };
-
                 function updateStepper(status) {
                     const aktif = statusIndex[status] || 1;
                     stepper.querySelectorAll('[data-step]').forEach((step) => {
@@ -518,9 +422,78 @@
                     });
                 }
 
+                function clearSidePanel() {
+                    selectedCode = null;
+                    sideMeja.textContent = '-';
+                    sideMeja.className = 'bg-gray-100 text-gray-500 font-bold px-2 py-0.5 rounded text-[10px]';
+                    sideMeta.textContent = 'Belum ada pesanan terpilih';
+                    sideStatus.textContent = '-';
+                    sideStatus.className = 'bg-gray-100 text-gray-500 font-bold text-[10px] px-2 py-1 rounded-lg';
+                    payMatch.textContent = '-';
+                    payTime.textContent = '-';
+                    payMethod.textContent = '-';
+                    payRrn.textContent = '-';
+                    payIntegrasi.textContent = '-';
+                    updateStepper(null);
+                    const sideMainBtn = document.getElementById('side-main-btn');
+                    if (sideMainBtn) sideMainBtn.style.display = 'none';
+                }
+
+                function updateSideActions(card) {
+                    const sideMainBtn = document.getElementById('side-main-btn');
+                    if (!sideMainBtn) return;
+                    const st = card.dataset.status;
+                    const pay = card.dataset.payStatus;
+                    const isTakeaway = card.dataset.type === 'takeaway';
+
+                    sideMainBtn.removeAttribute('data-action');
+                    sideMainBtn.disabled = false;
+
+                    if (st === 'verifikasi') {
+                        if (pay === 'pending') {
+                            sideMainBtn.className = 'btn-verif-qris w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl hover:bg-emerald-700 text-xs shadow-sm shadow-emerald-200 transition flex items-center justify-center gap-2';
+                            sideMainBtn.innerHTML = '<i class="fa-solid fa-circle-check text-sm"></i> Verifikasi QRIS &amp; Kirim ke Dapur';
+                            sideMainBtn.dataset.action = 'verifikasi';
+                            sideMainBtn.style.display = '';
+                        } else if (pay === 'belum') {
+                            sideMainBtn.className = 'btn-terima w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl hover:bg-indigo-700 text-xs shadow-sm flex items-center justify-center gap-2';
+                            sideMainBtn.innerHTML = '<i class="fa-solid fa-cash-register text-sm"></i> Terima Pembayaran Tunai &amp; Kirim ke Dapur';
+                            sideMainBtn.dataset.action = 'terima';
+                            sideMainBtn.style.display = '';
+                        } else {
+                            sideMainBtn.style.display = 'none';
+                        }
+                    } else if (st === 'dapur') {
+                        sideMainBtn.className = 'btn-advance w-full ' + (isTakeaway ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700') + ' text-white font-bold py-2.5 rounded-xl text-xs shadow-sm flex items-center justify-center gap-2';
+                        sideMainBtn.innerHTML = isTakeaway
+                            ? '<i class="fa-solid fa-bullhorn text-sm"></i> Ubah ke Siap (Panggil Kasir)'
+                            : '<i class="fa-solid fa-bell-concierge text-sm"></i> Ubah ke Siap (Antar ke Meja)';
+                        sideMainBtn.dataset.action = 'advance';
+                        sideMainBtn.style.display = '';
+                    } else if (st === 'siap') {
+                        sideMainBtn.className = 'btn-finish w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl hover:bg-emerald-700 text-xs shadow-sm flex items-center justify-center gap-2';
+                        sideMainBtn.innerHTML = '<i class="fa-solid fa-circle-check text-sm"></i> Tandai Selesai';
+                        sideMainBtn.dataset.action = 'finish';
+                        sideMainBtn.style.display = '';
+                    } else {
+                        sideMainBtn.style.display = 'none';
+                    }
+                }
+
                 function pilihKartu(card) {
-                    orderCards.forEach((c) => c.classList.toggle('is-selected', c === card));
-                    sideMeja.textContent = 'MEJA ' + card.dataset.meja;
+                    if (!card) {
+                        clearSidePanel();
+                        return;
+                    }
+
+                    selectedCode = card.dataset.order;
+                    currentCards.forEach((c) => c.classList.toggle('is-selected', c === card));
+                    const isTakeaway = card.dataset.type === 'takeaway';
+                    sideMeja.textContent = isTakeaway ? card.dataset.meja : 'MEJA ' + card.dataset.meja;
+                    sideMeja.className = isTakeaway
+                        ? 'bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]'
+                        : 'bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]';
+
                     sideMeta.textContent = 'ID: ' + card.dataset.order + ' • Pelanggan: ' + card.dataset.pemesan;
 
                     const pay = card.dataset.payStatus;
@@ -532,6 +505,12 @@
                         ? 'bg-emerald-100 text-emerald-800'
                         : (belum ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-800'));
 
+                    if (payPanelTitle) {
+                        payPanelTitle.innerHTML = belum
+                            ? '<i class="fa-solid fa-cash-register mr-1"></i> PEMBAYARAN DI KASIR'
+                            : '<i class="fa-solid fa-shield-check mr-1"></i> VERIFIKASI BUKTI TRANSFER QRIS';
+                    }
+
                     payMatch.textContent = lunas ? 'Lunas : ' + card.dataset.total
                         : (belum ? 'Tagihan : ' + card.dataset.total : 'Cocok : ' + card.dataset.total);
                     payMatch.className = 'font-bold text-xs ' + (belum ? 'text-rose-600' : 'text-emerald-600');
@@ -541,13 +520,49 @@
                     payIntegrasi.innerHTML = lunas
                         ? '<i class="fa-solid fa-check mr-1"></i> Terverifikasi'
                         : (belum ? '<i class="fa-solid fa-hourglass-half mr-1"></i> Menunggu Pembayaran'
-                            : '<i class="fa-solid fa-check mr-1"></i> Sesuai Tagihan');
+                            : '<i class="fa-solid fa-check mr-1"></i> Menunggu Verifikasi');
                     payIntegrasiRow.className = 'flex justify-between font-bold ' + (belum ? 'text-rose-600' : 'text-emerald-600');
 
                     updateStepper(card.dataset.status);
+                    updateSideActions(card);
                 }
 
-                pilihKartu(orderCards[0]);
+                function updateStatCounts(counts) {
+                    if (!counts) return;
+
+                    const statAktif = document.getElementById('stat-aktif');
+                    if (statAktif) statAktif.innerHTML = counts.aktif + ' <span class="text-xs font-normal text-gray-500">Order</span>';
+                    const statVerif = document.getElementById('stat-verifikasi');
+                    if (statVerif) statVerif.innerHTML = counts.verifikasi + ' <span class="text-xs font-normal text-gray-500">Order</span>';
+                    const statDapur = document.getElementById('stat-dapur');
+                    if (statDapur) statDapur.innerHTML = counts.dapur + ' <span class="text-xs font-normal text-gray-500">Order</span>';
+                    const statSelesai = document.getElementById('stat-selesai');
+                    if (statSelesai) statSelesai.innerHTML = counts.selesai + ' <span class="text-xs font-normal text-gray-500">Order</span>';
+
+                    const badgeSemua = document.getElementById('badge-semua');
+                    if (badgeSemua) badgeSemua.textContent = counts.total;
+                    const badgeVerif = document.getElementById('badge-verifikasi');
+                    if (badgeVerif) badgeVerif.textContent = counts.verifikasi;
+                    const badgeDapur = document.getElementById('badge-dapur');
+                    if (badgeDapur) badgeDapur.textContent = counts.dapur;
+                    const badgeSiap = document.getElementById('badge-siap');
+                    if (badgeSiap) badgeSiap.textContent = counts.siap;
+                }
+
+                function bindCards() {
+                    currentCards = Array.from(ordersList.querySelectorAll('.order-card'));
+
+                    if (currentCards.length === 0) {
+                        clearSidePanel();
+                    } else {
+                        const match = selectedCode
+                            ? currentCards.find((c) => c.dataset.order === selectedCode)
+                            : null;
+                        pilihKartu(match || currentCards[0]);
+                    }
+
+                    terapkanFilter();
+                }
 
                 const proofModal = document.getElementById('proof-modal');
                 const proofOrder = document.getElementById('proof-order');
@@ -556,31 +571,58 @@
                 const proofMethod = document.getElementById('proof-method');
                 const proofRrn = document.getElementById('proof-rrn');
                 const proofNote = document.getElementById('proof-note');
+                const btnModalVerif = document.getElementById('btn-modal-verif');
 
                 function setModal(buka) { proofModal.classList.toggle('is-open', buka); }
 
                 document.getElementById('btn-close-proof').addEventListener('click', () => setModal(false));
+                const btnModalClose = document.getElementById('btn-modal-close');
+                if (btnModalClose) btnModalClose.addEventListener('click', () => setModal(false));
                 proofModal.addEventListener('click', (e) => { if (e.target === proofModal) setModal(false); });
                 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setModal(false); });
 
-                // Ubah tampilan kartu (chip, badge status, status data)
-                function ubahKartu(card, o) {
-                    card.dataset.status = o.status;
-                    if (o.payStatus) card.dataset.payStatus = o.payStatus;
-                    const chip = card.querySelector('.card-chip');
-                    chip.textContent = o.chip;
-                    chip.className = 'card-chip font-bold text-[9px] px-2 py-0.5 rounded-full ml-2 ' + o.chipClass;
-                    const st = card.querySelector('.card-status');
-                    st.innerHTML = o.statusHtml;
-                    st.className = 'card-status text-[10px] font-bold px-2.5 py-1 rounded-lg ' + o.statusClass;
-                    const meja = card.querySelector('.card-meja');
-                    meja.className = 'card-meja bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-xl text-xs';
-                    if (o.actionHtml !== undefined) card.querySelector('.card-action').innerHTML = o.actionHtml;
-                    if (card.classList.contains('is-selected')) pilihKartu(card);
-                    terapkanFilter();
+                const actionMessages = {
+                    verifikasi: 'Pembayaran QRIS berhasil diverifikasi. Pesanan dikirim ke dapur.',
+                    terima: 'Pembayaran kasir diterima. Pesanan dikirim ke dapur.',
+                    advance: 'Status pesanan diperbarui menjadi siap.',
+                    finish: 'Pesanan ditandai selesai.',
+                    cancel: 'Pesanan telah dibatalkan.',
+                };
+
+                async function sendAction(card, action, btn) {
+                    const target = card || currentCards.find((c) => c.classList.contains('is-selected'));
+                    if (!target) return;
+
+                    if (action === 'cancel' && !window.confirm('Batalkan pesanan ' + target.dataset.order + '?')) {
+                        return;
+                    }
+
+                    const code = target.dataset.order.replace(/^#/, '');
+                    if (btn) btn.disabled = true;
+
+                    try {
+                        const response = await fetch(ordersBaseUrl + '/' + encodeURIComponent(code), {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            body: JSON.stringify({ action }),
+                        });
+
+                        if (!response.ok) throw new Error('request failed');
+
+                        toast(actionMessages[action] || 'Status pesanan diperbarui.');
+                        selectedCode = target.dataset.order;
+                        if (action === 'verifikasi' || action === 'terima') setModal(false);
+                        await refreshFeed(true);
+                    } catch (error) {
+                        toast('Gagal memproses pesanan. Silakan coba lagi.');
+                        if (btn) btn.disabled = false;
+                    }
                 }
 
-                // Delegasi klik untuk seluruh halaman
                 document.addEventListener('click', function (e) {
                     const btn = e.target.closest('button');
                     const card = e.target.closest('.order-card');
@@ -590,52 +632,61 @@
                         return;
                     }
 
+                    if (btn.dataset.action) {
+                        sendAction(card, btn.dataset.action, btn);
+                        return;
+                    }
+
                     if (btn.classList.contains('btn-cek-bukti')) {
-                        proofOrder.textContent = 'MEJA ' + card.dataset.meja + ' • ' + card.dataset.order;
+                        if (!card) return;
+                        proofOrder.textContent = (card.dataset.type === 'takeaway' ? card.dataset.meja : 'MEJA ' + card.dataset.meja) + ' • ' + card.dataset.order;
                         proofTotal.textContent = card.dataset.total;
                         proofTime.textContent = card.dataset.payTime;
                         proofMethod.textContent = card.dataset.payMethod;
                         proofRrn.textContent = card.dataset.rrn;
-                        proofNote.textContent = card.dataset.payStatus === 'lunas'
+                        const isLunas = card.dataset.payStatus === 'lunas';
+                        proofNote.textContent = isLunas
                             ? 'QRIS sudah terverifikasi — nominal sesuai tagihan.'
-                            : 'Nominal cocok dengan tagihan — silakan verifikasi & cetak struk.';
+                            : 'Nominal cocok dengan tagihan — silakan klik tombol verifikasi di bawah.';
+                        if (btnModalVerif) btnModalVerif.classList.toggle('hidden', isLunas);
                         setModal(true);
-                    } else if (btn.classList.contains('btn-advance')) {
-                        ubahKartu(card, {
-                            status: 'siap', chip: 'SIAP DIANTAR', chipClass: 'bg-blue-100 text-blue-800',
-                            statusHtml: '<i class="fa-solid fa-bell-concierge mr-1"></i> Siap Diantar',
-                            statusClass: 'bg-blue-100 text-blue-800',
-                            actionHtml: '<button type="button" class="btn-finish bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-emerald-600"><i class="fa-solid fa-circle-check mr-1"></i> Tandai \'Selesai\' (Meja Bersih)</button>',
-                        });
-                        toast('Pesanan ' + card.dataset.order + ' diubah ke: Siap Diantar');
-                    } else if (btn.classList.contains('btn-finish')) {
-                        ubahKartu(card, {
-                            status: 'selesai', chip: 'SELESAI', chipClass: 'bg-emerald-100 text-emerald-800',
-                            statusHtml: '<i class="fa-solid fa-check mr-1"></i> Selesai (Meja Bersih)',
-                            statusClass: 'bg-emerald-100 text-emerald-800', actionHtml: '',
-                        });
-                        toast('Pesanan ' + card.dataset.order + ' ditandai selesai');
-                    } else if (btn.classList.contains('btn-terima')) {
-                        card.dataset.payTime = '10:42:00 WIB';
-                        ubahKartu(card, {
-                            status: 'dapur', payStatus: 'lunas', chip: 'DIPROSES DAPUR', chipClass: 'bg-purple-100 text-purple-800',
-                            statusHtml: '<i class="fa-solid fa-money-bill-wave mr-1"></i> Lunas (Kasir Tunai)',
-                            statusClass: 'bg-emerald-100 text-emerald-800',
-                            actionHtml: '<button type="button" class="btn-advance bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl hover:bg-indigo-700">Ubah ke: "Siap Diantar" <i class="fa-solid fa-bell ml-1"></i></button>',
-                        });
-                        toast('Pembayaran ' + card.dataset.order + ' diterima, pesanan diteruskan ke dapur (demo)');
-                    } else if (btn.classList.contains('btn-tolak')) {
-                        const c = card || document.querySelector('.order-card.is-selected');
-                        toast('Pesanan ' + (c ? c.dataset.order : '') + ' ditandai ditolak (demo — tidak ada perubahan nyata)');
                     } else if (btn.classList.contains('btn-cetak')) {
-                        const c = card || document.querySelector('.order-card.is-selected') || orderCards[0];
-                        toast('Struk ' + c.dataset.order + ' dikirim ke printer (demo)');
+                        const target = card || currentCards.find((c) => c.classList.contains('is-selected'));
+                        if (target) toast('Struk ' + target.dataset.order + ' dikirim ke printer thermal kasir');
                     } else if (btn.classList.contains('btn-kot')) {
-                        toast('KOT dikirim ke dapur/bar (demo)');
+                        toast('KOT dapur berhasil dicetak');
+                    } else if (btn.classList.contains('btn-panggil-counter')) {
+                        const target = card || currentCards.find((c) => c.classList.contains('is-selected'));
+                        if (target) {
+                            toast('🔔 Panggilan Kasir: "Pesanan ' + target.dataset.order + ' atas nama ' + target.dataset.pemesan + ' silakan ambil di counter kasir!"');
+                        }
                     }
                 });
+
+                async function refreshFeed(force) {
+                    try {
+                        const response = await fetch(feedUrl, { headers: { 'Accept': 'application/json' } });
+                        if (!response.ok) return;
+                        const data = await response.json();
+
+                        if (force || data.html !== lastHtml) {
+                            lastHtml = data.html;
+                            ordersList.innerHTML = data.html;
+                            bindCards();
+                        }
+
+                        updateStatCounts(data.counts);
+                    } catch (error) {
+                        // retry on next poll
+                    }
+                }
+
+                bindCards();
+                refreshFeed(true);
+                setInterval(() => refreshFeed(false), 4000);
             });
         </script>
+
 
     </body>
 </html>

@@ -6,6 +6,7 @@
 
         <title>Self-Order — HQ Coffee | Pesanara</title>
         <meta name="description" content="Pesan menu HQ Coffee langsung dari meja kamu. Self-order cepat, bayar QRIS, tanpa antre.">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <script>document.documentElement.classList.add('js');</script>
 
@@ -20,18 +21,18 @@
             <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-8">
                 {{-- Logo / Nomor Meja --}}
                 <div class="flex items-center gap-3">
-                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#7C3AED] text-xs font-bold leading-none tracking-wide text-white shadow-md shadow-[#7C3AED]/30">
+                    <span id="header-table-box" class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#7C3AED] text-xs font-bold leading-none tracking-wide text-white shadow-md shadow-[#7C3AED]/30">
                         MEJA<br>01
                     </span>
                     <div class="min-w-0">
                         <div class="flex flex-wrap items-center gap-2">
                             <h1 class="text-base font-bold tracking-tight text-[#1B1338] sm:text-lg">Self-Order HQ Coffee</h1>
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-semibold text-[#059669]">
-                                <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]"></span>
-                                Dine-In Aktif
+                            <span id="header-order-badge" class="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-semibold text-[#059669] transition">
+                                <span id="header-order-dot" class="h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]"></span>
+                                <span id="header-order-text">Dine-In Aktif</span>
                             </span>
                         </div>
-                        <p class="mt-0.5 text-xs text-slate-500">Pesan langsung dari meja, tanpa antre</p>
+                        <p id="header-order-desc" class="mt-0.5 text-xs text-slate-500">Pesan langsung dari meja, tanpa antre</p>
                     </div>
                 </div>
 
@@ -314,91 +315,11 @@
                             <h2 class="text-lg font-bold tracking-tight text-[#1B1338]">Pesanan Kamu</h2>
                             <p class="mt-0.5 text-xs font-medium text-slate-500">Meja 01 • Dine In</p>
                         </div>
-                        <span id="item-count-badge" class="shrink-0 rounded-full bg-[#7C3AED] px-3 py-1 text-xs font-bold text-white">3 Item</span>
+                        <span id="item-count-badge" class="hidden shrink-0 rounded-full bg-[#7C3AED] px-3 py-1 text-xs font-bold text-white">0 Item</span>
                     </div>
 
                     {{-- Daftar Item Pesanan --}}
                     <div id="cart-items" class="mt-4 space-y-3">
-                        <div class="cart-item rounded-2xl border border-[#ECE9F6] bg-[#FAFAFC] p-3.5" data-price="22000">
-                            <div class="flex items-start justify-between gap-3">
-                                <button type="button" class="cart-item-toggle min-w-0 flex-1 text-left" aria-expanded="true">
-                                    <p class="text-sm font-bold text-[#1B1338]">Kopi Susu Aren HQ</p>
-                                    <p class="mt-0.5 text-xs leading-relaxed text-slate-500">Less Sugar, Normal Ice</p>
-                                </button>
-                                <p class="item-price shrink-0 text-sm font-extrabold text-[#1B1338]">Rp 22.000</p>
-                            </div>
-                            <div class="item-controls mt-3 flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-1 rounded-full border border-[#E4DFF3] bg-white p-1">
-                                    <button type="button" class="qty-dec grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Kurangi jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg>
-                                    </button>
-                                    <span class="qty w-6 text-center text-sm font-bold text-[#1B1338]">1</span>
-                                    <button type="button" class="qty-inc grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Tambah jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-                                    </button>
-                                </div>
-                                <button type="button" class="remove-item inline-flex items-center gap-1 text-xs font-semibold text-red-500 transition hover:text-red-600">
-                                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                    </svg>
-                                    Hapus
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="cart-item rounded-2xl border border-[#ECE9F6] bg-[#FAFAFC] p-3.5" data-price="35000">
-                            <div class="flex items-start justify-between gap-3">
-                                <button type="button" class="cart-item-toggle min-w-0 flex-1 text-left" aria-expanded="true">
-                                    <p class="text-sm font-bold text-[#1B1338]">Rice Bowl Ayam Teriyaki</p>
-                                    <p class="mt-0.5 text-xs leading-relaxed text-slate-500">Telur Setengah Matang</p>
-                                </button>
-                                <p class="item-price shrink-0 text-sm font-extrabold text-[#1B1338]">Rp 35.000</p>
-                            </div>
-                            <div class="item-controls mt-3 flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-1 rounded-full border border-[#E4DFF3] bg-white p-1">
-                                    <button type="button" class="qty-dec grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Kurangi jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg>
-                                    </button>
-                                    <span class="qty w-6 text-center text-sm font-bold text-[#1B1338]">1</span>
-                                    <button type="button" class="qty-inc grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Tambah jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-                                    </button>
-                                </div>
-                                <button type="button" class="remove-item inline-flex items-center gap-1 text-xs font-semibold text-red-500 transition hover:text-red-600">
-                                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                    </svg>
-                                    Hapus
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="cart-item rounded-2xl border border-[#ECE9F6] bg-[#FAFAFC] p-3.5" data-price="24000">
-                            <div class="flex items-start justify-between gap-3">
-                                <button type="button" class="cart-item-toggle min-w-0 flex-1 text-left" aria-expanded="true">
-                                    <p class="text-sm font-bold text-[#1B1338]">Croissant Butter</p>
-                                    <p class="mt-0.5 text-xs leading-relaxed text-slate-500">Disajikan Hangat</p>
-                                </button>
-                                <p class="item-price shrink-0 text-sm font-extrabold text-[#1B1338]">Rp 24.000</p>
-                            </div>
-                            <div class="item-controls mt-3 flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-1 rounded-full border border-[#E4DFF3] bg-white p-1">
-                                    <button type="button" class="qty-dec grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Kurangi jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg>
-                                    </button>
-                                    <span class="qty w-6 text-center text-sm font-bold text-[#1B1338]">1</span>
-                                    <button type="button" class="qty-inc grid h-7 w-7 place-items-center rounded-full text-[#6D28D9] transition hover:bg-[#EDE9FE]" aria-label="Tambah jumlah">
-                                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-                                    </button>
-                                </div>
-                                <button type="button" class="remove-item inline-flex items-center gap-1 text-xs font-semibold text-red-500 transition hover:text-red-600">
-                                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                                    </svg>
-                                    Hapus
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
                     <p id="cart-empty" class="mt-4 hidden rounded-2xl border border-dashed border-[#E4DFF3] bg-[#FAFAFC] p-6 text-center text-sm text-slate-500">
@@ -414,6 +335,66 @@
                             placeholder="Contoh: Tolong sediakan sendok tambahan..."
                             class="mt-2 w-full resize-none rounded-2xl border border-[#E4DFF3] bg-[#FAFAFC] px-4 py-3 text-sm text-[#1B1338] placeholder:text-slate-400 focus:border-[#7C3AED] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/20"
                         ></textarea>
+                    </div>
+
+                    {{-- Pilihan Jenis Pemesanan (Dine-in / Takeaway) --}}
+                    <div class="mt-5">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Jenis Pemesanan</p>
+                            <span id="order-type-caption" class="text-[11px] font-semibold text-[#6D28D9]">Makan di Tempat</span>
+                        </div>
+                        <div class="mt-2 grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih jenis pemesanan">
+                            <button
+                                type="button"
+                                id="btn-type-dinein"
+                                class="order-type-btn is-active flex flex-col items-start gap-1 rounded-2xl border-2 border-[#7C3AED] bg-[#F3F0FD] px-4 py-3 text-left transition"
+                                data-type="dine-in"
+                                role="radio"
+                                aria-checked="true"
+                            >
+                                <span class="flex items-center gap-1.5 text-sm font-bold text-[#6D28D9]">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                                        <path d="M7 2v20" />
+                                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+                                    </svg>
+                                    Dine-in
+                                </span>
+                                <span class="text-[11px] font-medium text-[#7C3AED]/70">Makan di Meja 01</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                id="btn-type-takeaway"
+                                class="order-type-btn flex flex-col items-start gap-1 rounded-2xl border-2 border-[#E4DFF3] bg-white px-4 py-3 text-left transition hover:border-[#C9BFEA]"
+                                data-type="takeaway"
+                                role="radio"
+                                aria-checked="false"
+                            >
+                                <span class="flex items-center gap-1.5 text-sm font-bold text-slate-600">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                                        <path d="M3 6h18" />
+                                        <path d="M16 10a4 4 0 0 1-8 0" />
+                                    </svg>
+                                    Takeaway
+                                </span>
+                                <span class="text-[11px] font-medium text-slate-400">Bawa pulang / bungkus</span>
+                            </button>
+                        </div>
+
+                        {{-- Alert info jika memilih Takeaway --}}
+                        <div id="takeaway-notice" class="mt-2.5 hidden items-start gap-2.5 rounded-2xl border border-amber-200/80 bg-amber-50/80 p-3 text-xs leading-relaxed text-amber-900">
+                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <div>
+                                <p class="font-bold text-amber-950">Pesanan Bawa Pulang (Takeaway)</p>
+                                <p class="mt-0.5 text-amber-800">Makanan &amp; minuman akan dibungkus rapi. Silakan ambil pesanan di counter pick-up saat nomor antrean dipanggil.</p>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Pilihan Metode Pembayaran --}}
@@ -434,7 +415,7 @@
                                     </svg>
                                     QRIS Meja
                                 </span>
-                                <span class="text-[11px] font-medium text-[#7C3AED]/70">Scan di meja</span>
+                                <span id="qris-subtitle" class="text-[11px] font-medium text-[#7C3AED]/70">Scan di meja</span>
                             </button>
 
                             <button
@@ -450,7 +431,7 @@
                                     </svg>
                                     Bayar Kasir
                                 </span>
-                                <span class="text-[11px] font-medium text-slate-400">Ke depan kasir</span>
+                                <span id="kasir-subtitle" class="text-[11px] font-medium text-slate-400">Ke depan kasir</span>
                             </button>
                         </div>
                     </div>
@@ -458,16 +439,20 @@
                     {{-- Rincian Ringkasan Harga --}}
                     <dl class="mt-5 space-y-2.5 border-t border-[#ECE9F6] pt-5 text-sm">
                         <div class="flex items-center justify-between">
-                            <dt class="text-slate-500">Subtotal (<span id="summary-count">3</span> item)</dt>
-                            <dd id="summary-subtotal" class="font-semibold text-[#1B1338]">Rp 81.000</dd>
+                            <dt class="text-slate-500">Subtotal (<span id="summary-count">0</span> item)</dt>
+                            <dd id="summary-subtotal" class="font-semibold text-[#1B1338]">Rp 0</dd>
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-slate-500">Pajak Restoran PB1 (10%)</dt>
-                            <dd id="summary-tax" class="font-semibold text-[#1B1338]">Rp 8.100</dd>
+                            <dd id="summary-tax" class="font-semibold text-[#1B1338]">Rp 0</dd>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <dt class="text-slate-500">Diskon Promo Dine-in</dt>
-                            <dd id="summary-discount" class="font-semibold text-[#059669]">-Rp 9.900</dd>
+                        <div id="packaging-row" class="hidden items-center justify-between">
+                            <dt class="text-slate-500">Biaya Kantong/Kemasan</dt>
+                            <dd class="font-semibold text-[#059669]">GRATIS</dd>
+                        </div>
+                        <div id="discount-row" class="flex items-center justify-between">
+                            <dt id="discount-label" class="text-slate-500">Diskon Promo Dine-in</dt>
+                            <dd id="summary-discount" class="font-semibold text-[#059669]">Rp 0</dd>
                         </div>
 
                         <div class="mt-3 flex items-end justify-between gap-3 rounded-2xl bg-[#F3F0FD] px-4 py-3.5">
@@ -477,7 +462,7 @@
                                     Termasuk PPN
                                 </dd>
                             </div>
-                            <dd id="summary-total" class="text-2xl font-extrabold tracking-tight text-[#1B1338]">Rp 79.200</dd>
+                            <dd id="summary-total" class="text-2xl font-extrabold tracking-tight text-[#1B1338]">Rp 0</dd>
                         </div>
                     </dl>
 
@@ -493,9 +478,9 @@
                             <rect x="3" y="14" width="7" height="7" rx="1" />
                             <path d="M14 14h3v3h-3zM20 14h1M14 20h3M20 17v4" />
                         </svg>
-                        <span id="checkout-label">Lanjut Pembayaran QRIS (Rp 79.200)</span>
+                        <span id="checkout-label">Keranjang Kosong</span>
                     </button>
-                    <p class="mt-2.5 text-center text-xs leading-relaxed text-slate-500">
+                    <p id="order-footer-note" class="mt-2.5 text-center text-xs leading-relaxed text-slate-500">
                         Pesanan langsung diteruskan ke barista meja 01
                     </p>
 
@@ -532,7 +517,21 @@
                 const summaryDiscount = document.getElementById('summary-discount');
                 const summaryTotal = document.getElementById('summary-total');
                 const checkoutLabel = document.getElementById('checkout-label');
+                const discountLabel = document.getElementById('discount-label');
+                const packagingRow = document.getElementById('packaging-row');
 
+                const orderTypeCaption = document.getElementById('order-type-caption');
+                const takeawayNotice = document.getElementById('takeaway-notice');
+                const headerOrderBadge = document.getElementById('header-order-badge');
+                const headerOrderDot = document.getElementById('header-order-dot');
+                const headerOrderText = document.getElementById('header-order-text');
+                const headerOrderDesc = document.getElementById('header-order-desc');
+                const orderFooterNote = document.getElementById('order-footer-note');
+                const orderNoteInput = document.getElementById('order-note');
+                const qrisSubtitle = document.getElementById('qris-subtitle');
+                const kasirSubtitle = document.getElementById('kasir-subtitle');
+
+                let orderType = 'dine-in';
                 let paymentMethod = 'qris';
 
                 function recalcTotals() {
@@ -550,7 +549,8 @@
 
                     const isEmpty = items.length === 0;
                     const tax = Math.round(subtotal * 0.1);
-                    const discount = subtotal > 0 ? Math.min(DISCOUNT, subtotal) : 0;
+                    const isDineIn = orderType === 'dine-in';
+                    const discount = (!isEmpty && isDineIn) ? Math.min(DISCOUNT, subtotal) : 0;
                     const total = Math.max(subtotal + tax - discount, 0);
 
                     cartEmpty.classList.toggle('hidden', !isEmpty);
@@ -559,7 +559,17 @@
                     summaryCount.textContent = totalQty;
                     summarySubtotal.textContent = formatRupiah(subtotal);
                     summaryTax.textContent = formatRupiah(tax);
-                    summaryDiscount.textContent = '-' + formatRupiah(discount);
+
+                    if (isDineIn) {
+                        discountLabel.textContent = 'Diskon Promo Dine-in';
+                        summaryDiscount.textContent = discount > 0 ? '-' + formatRupiah(discount) : 'Rp 0';
+                        summaryDiscount.className = 'font-semibold text-[#059669]';
+                    } else {
+                        discountLabel.textContent = 'Promo Dine-in (Khusus Meja)';
+                        summaryDiscount.textContent = 'Rp 0';
+                        summaryDiscount.className = 'font-medium text-slate-400';
+                    }
+
                     summaryTotal.textContent = formatRupiah(total);
 
                     const methodLabel = paymentMethod === 'qris' ? 'Lanjut Pembayaran QRIS' : 'Lanjut ke Kasir';
@@ -567,6 +577,73 @@
 
                     return total;
                 }
+
+                // Toggle pilihan jenis pemesanan (Dine-in / Takeaway)
+                const orderTypeButtons = document.querySelectorAll('.order-type-btn');
+                orderTypeButtons.forEach((button) => {
+                    button.addEventListener('click', function () {
+                        orderType = button.dataset.type;
+
+                        orderTypeButtons.forEach((other) => {
+                            const isActive = other === button;
+                            other.classList.toggle('is-active', isActive);
+                            other.classList.toggle('border-[#7C3AED]', isActive);
+                            other.classList.toggle('bg-[#F3F0FD]', isActive);
+                            other.classList.toggle('border-[#E4DFF3]', !isActive);
+                            other.classList.toggle('bg-white', !isActive);
+                            other.setAttribute('aria-checked', isActive ? 'true' : 'false');
+
+                            const title = other.querySelector('span');
+                            const subtitle = other.querySelectorAll('span')[1];
+                            title.classList.toggle('text-[#6D28D9]', isActive);
+                            title.classList.toggle('text-slate-600', !isActive);
+                            subtitle.classList.toggle('text-[#7C3AED]/70', isActive);
+                            subtitle.classList.toggle('text-slate-400', !isActive);
+                        });
+
+                        const isDineIn = orderType === 'dine-in';
+
+                        if (isDineIn) {
+                            orderTypeCaption.textContent = 'Makan di Tempat';
+                            orderTypeCaption.className = 'text-[11px] font-semibold text-[#6D28D9]';
+                            takeawayNotice.classList.add('hidden');
+                            takeawayNotice.classList.remove('flex');
+                            packagingRow.classList.add('hidden');
+
+                            if (headerOrderBadge) {
+                                headerOrderBadge.className = 'inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-semibold text-[#059669] transition';
+                                headerOrderDot.className = 'h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]';
+                                headerOrderText.textContent = 'Dine-In Aktif';
+                                headerOrderDesc.textContent = 'Pesan langsung dari meja, tanpa antre';
+                            }
+
+                            qrisSubtitle.textContent = 'Scan di meja';
+                            kasirSubtitle.textContent = 'Ke depan kasir';
+                            orderFooterNote.textContent = 'Pesanan langsung diteruskan ke barista meja 01';
+                            orderNoteInput.placeholder = 'Contoh: Tolong sediakan sendok tambahan...';
+                        } else {
+                            orderTypeCaption.textContent = 'Bawa Pulang (Takeaway)';
+                            orderTypeCaption.className = 'text-[11px] font-semibold text-amber-600';
+                            takeawayNotice.classList.remove('hidden');
+                            takeawayNotice.classList.add('flex');
+                            packagingRow.classList.remove('hidden');
+
+                            if (headerOrderBadge) {
+                                headerOrderBadge.className = 'inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700 transition';
+                                headerOrderDot.className = 'h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500';
+                                headerOrderText.textContent = 'Takeaway (Bawa Pulang)';
+                                headerOrderDesc.textContent = 'Pesanan dibungkus & siap di counter pick-up';
+                            }
+
+                            qrisSubtitle.textContent = 'Scan di counter/meja';
+                            kasirSubtitle.textContent = 'Bayar di kasir';
+                            orderFooterNote.textContent = 'Pesanan dibungkus & dapat diambil di counter pick-up saat nomor dipanggil';
+                            orderNoteInput.placeholder = 'Contoh: Pisahkan gula/es, sedotan ramah lingkungan, bungkus rapi...';
+                        }
+
+                        recalcTotals();
+                    });
+                });
 
                 // Buka / tutup counter jumlah item pesanan
                 cartItemsWrap.addEventListener('click', function (event) {
@@ -688,6 +765,7 @@
                             item.className = 'cart-item rounded-2xl border border-[#EDE9FE] bg-[#FAFAFC] p-3.5';
                             item.dataset.price = button.dataset.price;
                             item.dataset.name = button.dataset.name;
+                            item.dataset.note = '';
                             item.innerHTML =
                                 '<div class="flex items-start justify-between gap-3">' +
                                     '<button type="button" class="cart-item-toggle min-w-0 flex-1 text-left" aria-expanded="true">' +
@@ -739,14 +817,53 @@
                 });
 
                 // Tombol checkout utama
-                document.getElementById('checkout-button').addEventListener('click', function () {
-                    const items = cartItemsWrap.querySelectorAll('.cart-item');
+                document.getElementById('checkout-button').addEventListener('click', async function () {
+                    const items = Array.from(cartItemsWrap.querySelectorAll('.cart-item'));
                     if (items.length === 0) return;
 
-                    if (paymentMethod === 'qris') {
-                        window.location.href = '{{ route('pembayaran-qris') }}';
-                    } else {
-                        alert('Pesanan terkirim ke kasir — silakan tunggu konfirmasi petugas.');
+                    const button = this;
+                    const label = document.getElementById('checkout-label');
+                    const originalLabel = label.textContent;
+
+                    const payloadItems = items.map((item) => ({
+                        name: item.dataset.name,
+                        price: parseInt(item.dataset.price, 10),
+                        qty: parseInt(item.querySelector('.qty').textContent, 10),
+                        note: item.dataset.note || null,
+                    }));
+
+                    button.disabled = true;
+                    button.classList.add('opacity-70');
+                    label.textContent = 'Mengirim pesanan...';
+
+                    try {
+                        const response = await fetch('{{ route('orders.store') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                            body: JSON.stringify({
+                                order_type: orderType,
+                                payment_method: paymentMethod,
+                                table_number: '01',
+                                note: orderNoteInput.value.trim() || null,
+                                items: payloadItems,
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Gagal membuat pesanan.');
+                        }
+
+                        const result = await response.json();
+                        window.location.href = result.redirect;
+                    } catch (error) {
+                        button.disabled = false;
+                        button.classList.remove('opacity-70');
+                        label.textContent = originalLabel;
+                        alert('Pesanan gagal dikirim. Silakan coba lagi.');
                     }
                 });
 

@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Pembayaran QRIS - HQ Coffee &amp; Bites</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <script>document.documentElement.classList.add('js');</script>
 
@@ -57,25 +58,44 @@
         </style>
     </head>
 
+    @php
+        $orderType = $order->order_type;
+        $isTakeaway = $order->isTakeaway();
+        $totalFormatted = number_format($order->total, 0, ',', '.');
+        $cleanAmount = (string) $order->total;
+        $itemCount = $order->items->sum('qty');
+        $orderCode = $order->code;
+    @endphp
+
     <body class="bg-indigo-50/20 flex justify-center items-center min-h-screen p-4">
 
         <div class="w-full max-w-md bg-white rounded-3xl p-5 shadow-xl border border-gray-100 space-y-4">
 
-            <div class="flex items-center space-x-3 pb-3 border-b border-gray-100">
-                <div class="w-8 h-8 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 font-bold text-xs">HQ</div>
-                <span class="font-bold text-sm text-gray-800">HQ Coffee &amp; Bites • Meja 01</span>
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 font-bold text-xs">HQ</div>
+                    <div>
+                        <span class="font-bold text-sm text-gray-800 block">HQ Coffee &amp; Bites</span>
+                        <span class="text-[11px] text-gray-400 font-medium">{{ $isTakeaway ? 'Pesanan Bawa Pulang' : 'Self-Order • Meja 01' }}</span>
+                    </div>
+                </div>
+                <a href="{{ route('pemesanan') }}" class="text-xs font-semibold text-[#7C3AED] hover:underline inline-flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali
+                </a>
             </div>
 
             <div class="bg-indigo-50/60 p-4 rounded-2xl flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-indigo-100 text-indigo-600 rounded-xl"><i class="fa-solid fa-utensils text-xs"></i></div>
+                    <div class="p-2.5 bg-indigo-100 text-indigo-600 rounded-xl">
+                        <i class="fa-solid {{ $isTakeaway ? 'fa-bag-shopping' : 'fa-utensils' }} text-sm"></i>
+                    </div>
                     <div>
-                        <h3 class="font-bold text-gray-800 text-xs">Makan di Tempat</h3>
-                        <p class="text-[10px] text-gray-400">3 Menu • Meja 01</p>
+                        <h3 class="font-bold text-gray-800 text-xs">{{ $isTakeaway ? 'Bawa Pulang (Takeaway)' : 'Makan di Tempat (Dine-in)' }}</h3>
+                        <p class="text-[10px] text-gray-400">{{ $itemCount }} Item • {{ $isTakeaway ? 'Counter Pick-up' : 'Meja 01' }} • #{{ $orderCode }}</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <span class="text-lg font-black text-indigo-600 block">Rp 79.200</span>
+                    <span class="text-lg font-black text-indigo-600 block">Rp {{ $totalFormatted }}</span>
                     <span class="text-[9px] text-gray-400">TERMASUK PB1 10%</span>
                 </div>
             </div>
@@ -93,7 +113,7 @@
                 </div>
 
                 <button id="btn-zoom-qr" type="button" aria-label="Perbesar kode QR" class="block bg-white p-4 rounded-2xl mx-auto shadow-sm border border-gray-100 cursor-zoom-in">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;data=HQCoffee79200" class="w-44 h-44 mx-auto" alt="Kode QRIS">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;data=HQCoffee{{ $cleanAmount }}" class="w-44 h-44 mx-auto" alt="Kode QRIS">
                 </button>
 
                 <div>
@@ -117,7 +137,7 @@
                     </li>
                     <li class="flex items-start">
                         <span class="bg-indigo-100 text-indigo-600 font-bold w-4 h-4 rounded-full flex items-center justify-center text-[9px] mr-2 flex-shrink-0 mt-0.5">2</span>
-                        <span>Pindai (scan) kode QRIS di atas dan pastikan nominal tepat <strong class="text-indigo-600">Rp 79.200</strong> atas nama <strong>HQ Coffee &amp; Bites</strong>.</span>
+                        <span>Pindai (scan) kode QRIS di atas dan pastikan nominal tepat <strong class="text-indigo-600">Rp {{ $totalFormatted }}</strong> atas nama <strong>HQ Coffee &amp; Bites</strong>.</span>
                     </li>
                     <li class="flex items-start">
                         <span class="bg-indigo-100 text-indigo-600 font-bold w-4 h-4 rounded-full flex items-center justify-center text-[9px] mr-2 flex-shrink-0 mt-0.5">3</span>
@@ -139,8 +159,8 @@
         <div id="qr-modal" class="hq-modal" role="dialog" aria-modal="true" aria-label="Kode QRIS diperbesar">
             <div class="bg-white rounded-3xl p-6 text-center space-y-3 max-w-sm w-full">
                 <span class="bg-red-600 text-white font-bold text-[10px] px-2 py-0.5 rounded">QRIS</span>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=320x320&amp;data=HQCoffee79200" class="w-72 h-72 mx-auto rounded-xl" alt="Kode QRIS diperbesar">
-                <p class="text-xs font-bold text-gray-800">HQ Coffee &amp; Bites • Rp 79.200</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=320x320&amp;data=HQCoffee{{ $cleanAmount }}" class="w-72 h-72 mx-auto rounded-xl" alt="Kode QRIS diperbesar">
+                <p class="text-xs font-bold text-gray-800">HQ Coffee &amp; Bites • Rp {{ $totalFormatted }}</p>
                 <p class="text-[10px] text-gray-400">Ketuk di luar kotak untuk menutup</p>
             </div>
         </div>
@@ -191,13 +211,37 @@
                 modal.addEventListener('click', (e) => { if (e.target === modal) setModal(false); });
                 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setModal(false); });
 
-                btnBayar.addEventListener('click', function () {
+                btnBayar.addEventListener('click', async function () {
                     if (this.disabled) return;
-                    toast('Bukti pembayaran menunggu konfirmasi kasir (demo — tidak ada transaksi nyata)');
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Memverifikasi Pembayaran...';
+
+                    try {
+                        const response = await fetch('{{ route('orders.pay', $order) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Gagal menyimpan pembayaran.');
+                        }
+
+                        toast('Pembayaran QRIS Berhasil! Menunggu verifikasi kasir.');
+                        setTimeout(() => {
+                            window.location.href = '{{ route('status-pesanan', ['order' => $order->code]) }}';
+                        }, 900);
+                    } catch (error) {
+                        this.disabled = false;
+                        this.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Saya Sudah Bayar';
+                        toast('Gagal menyimpan pembayaran. Silakan coba lagi.');
+                    }
                 });
 
                 document.getElementById('btn-bantuan').addEventListener('click', function () {
-                    toast('Menghubungi kasir... mohon tunggu (demo)');
+                    toast('Menghubungi kasir... mohon tunggu');
                 });
             });
         </script>

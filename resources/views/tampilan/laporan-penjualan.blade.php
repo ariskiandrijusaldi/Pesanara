@@ -59,6 +59,15 @@
                     </span>
                 </a>
 
+                <div class="hidden items-center gap-2 sm:flex">
+                    <a href="{{ route('laporan-penjualan') }}" class="rounded-full bg-[#F3F0FD] px-4 py-1.5 text-xs font-semibold text-[#6D28D9]">
+                        Laporan
+                    </a>
+                    <a href="{{ route('stok-menu') }}" class="rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">
+                        Kelola Menu
+                    </a>
+                </div>
+
                 <div class="flex items-center gap-2.5">
                     <span class="hidden text-right leading-tight sm:block">
                         <span class="block text-xs font-semibold text-[#1B1338]">{{ auth()->user()->name }}</span>
@@ -78,8 +87,8 @@
 
             {{-- Navigasi mobile --}}
             <nav class="flex gap-1 border-t border-[#ECE9F6] px-5 py-2 sm:hidden" aria-label="Navigasi owner mobile">
-                <a href="#" aria-current="page" class="flex-1 rounded-lg bg-[#F3F0FD] py-2 text-center text-xs font-semibold text-[#6D28D9]">Ringkasan Laporan</a>
-                <a href="#" class="flex-1 rounded-lg py-2 text-center text-xs font-semibold text-slate-600">Kelola Menu</a>
+                <a href="{{ route('laporan-penjualan') }}" aria-current="page" class="flex-1 rounded-lg bg-[#F3F0FD] py-2 text-center text-xs font-semibold text-[#6D28D9]">Ringkasan Laporan</a>
+                <a href="{{ route('stok-menu') }}" class="flex-1 rounded-lg py-2 text-center text-xs font-semibold text-slate-600">Kelola Menu</a>
             </nav>
         </header>
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,18 +29,22 @@ Route::get('/qris-instan', function () {
     return view('tampilan.qris-instan');
 })->name('qris-instan');
 
-Route::get('/pembayaran-qris', function () {
-    return view('tampilan.pembayaran-qris');
-})->name('pembayaran-qris');
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+Route::get('/orders/{order}/status', [OrderController::class, 'statusFeed'])->name('orders.status');
+Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
 
-Route::middleware(['auth', 'role:kasir'])->group(function () {
+Route::get('/pembayaran-qris', [OrderController::class, 'payment'])->name('pembayaran-qris');
+
+Route::get('/status-pesanan', [OrderController::class, 'status'])->name('status-pesanan');
+
+Route::middleware(['auth', 'role:kasir,owner'])->group(function () {
     Route::get('/stok-menu', function () {
         return view('tampilan.stok-menu');
     })->name('stok-menu');
 
-    Route::get('/kasir-order-monitor', function () {
-        return view('tampilan.kasir-order-monitor');
-    })->name('kasir-order-monitor');
+    Route::get('/kasir-order-monitor', [OrderController::class, 'monitor'])->name('kasir-order-monitor');
+    Route::get('/kasir-order-monitor/feed', [OrderController::class, 'feed'])->name('kasir-order-monitor.feed');
+    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
 });
 
 Route::middleware(['auth', 'role:owner'])->get('/laporan-penjualan', function () {
