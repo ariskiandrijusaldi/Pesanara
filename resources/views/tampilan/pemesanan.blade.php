@@ -738,6 +738,18 @@
                     }, 1200);
                 });
 
+                // Tombol checkout utama
+                document.getElementById('checkout-button').addEventListener('click', function () {
+                    const items = cartItemsWrap.querySelectorAll('.cart-item');
+                    if (items.length === 0) return;
+
+                    if (paymentMethod === 'qris') {
+                        window.location.href = '{{ route('pembayaran-qris') }}';
+                    } else {
+                        alert('Pesanan terkirim ke kasir — silakan tunggu konfirmasi petugas.');
+                    }
+                });
+
                 recalcTotals();
             });
         </script>

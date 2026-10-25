@@ -17,13 +17,13 @@
 
             {{-- Badge brand --}}
             <div class="flex justify-center">
-                <span class="inline-flex items-center gap-2 rounded-full border border-[#E4DFF3] bg-[#F3F0FD] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#6D28D9]">
+                <a href="{{ route('landing') }}" class="inline-flex items-center gap-2 rounded-full border border-[#E4DFF3] bg-[#F3F0FD] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#6D28D9] transition hover:bg-[#EDE9FE]">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M4 8h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Z" />
                         <path d="M16 9h1.5a2.5 2.5 0 0 1 0 5H16" />
                     </svg>
                     HQ Coffee &amp; Bites
-                </span>
+                </a>
             </div>
 
             {{-- Judul --}}
