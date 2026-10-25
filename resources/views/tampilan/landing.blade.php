@@ -38,7 +38,7 @@
                 </ul>
 
                 <div class="flex items-center gap-2.5">
-                    <a href="#menu" class="hidden items-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#6D28D9] sm:inline-flex">
+                    <a href="{{ route('pemesanan') }}" class="hidden items-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#6D28D9] sm:inline-flex">
                         Mulai Pesan
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -89,7 +89,7 @@
                             <li><a href="#lokasi" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#F3F0FD] hover:text-[#6D28D9]">Lokasi</a></li>
                         </ul>
 
-                        <a href="#menu" class="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]">
+                        <a href="{{ route('pemesanan') }}" class="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#7C3AED] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]">
                             Mulai Pesan
                         </a>
 
@@ -133,7 +133,7 @@
                         </p>
 
                         <div class="reveal mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4" style="--reveal-delay: 240ms">
-                            <a href="#menu" class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B5CF6] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#7C3AED]/30 transition hover:bg-[#7C3AED]">
+                            <a href="{{ route('pemesanan') }}" class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B5CF6] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#7C3AED]/30 transition hover:bg-[#7C3AED]">
                                 Mulai Pesan
                                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -262,12 +262,12 @@
                                     </div>
                                     <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-slate-500">{{ $item['description'] }}</p>
 
-                                    <button type="button" class="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#F3F0FD] px-4 py-2.5 text-sm font-semibold text-[#6D28D9] transition hover:bg-[#7C3AED] hover:text-white">
+                                    <a href="{{ route('pemesanan') }}" class="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#F3F0FD] px-4 py-2.5 text-sm font-semibold text-[#6D28D9] transition hover:bg-[#7C3AED] hover:text-white">
                                         Pesan
                                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                             <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                                         </svg>
-                                    </button>
+                                    </a>
                                 </div>
                             </article>
                         @endforeach
@@ -324,7 +324,7 @@
                                     </span>
                                     <div>
                                         <dt class="text-sm font-semibold text-[#1B1338]">Alamat</dt>
-                                        <dd class="mt-0.5 text-sm leading-relaxed text-slate-500">Jl. Raya Contoh No. 12, Kota, Indonesia</dd>
+                                        <dd class="mt-0.5 text-sm leading-relaxed text-slate-500">Jl. Dr. Sutomo No.92, Kubu Marapalam, Kec. Padang Tim., Kota Padang, Sumatera Barat 25125</dd>
                                     </div>
                                 </div>
 
@@ -358,22 +358,22 @@
                                 </div>
                             </dl>
 
-                            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                                <a
-                                    href="https://www.google.com/maps/search/?api=1&query=Pesanara"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#7C3AED] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]"
-                                >
-                                    Buka di Google Maps
-                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                                    </svg>
-                                </a>
-                                <a href="#lokasi" class="inline-flex flex-1 items-center justify-center rounded-full border border-[#E4DFF3] px-6 py-3 text-sm font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD]">
-                                    Hubungi Kami
-                                </a>
-                            </div>
+                           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+    <a
+        href="https://maps.google.com/?cid=4761024236505206109"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#7C3AED] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#6D28D9]"
+    >
+        Buka di Google Maps
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </a>
+    <a href="#lokasi" class="inline-flex flex-1 items-center justify-center rounded-full border border-[#E4DFF3] px-6 py-3 text-sm font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD]">
+        Hubungi Kami
+    </a>
+</div>
                         </div>
                     </div>
                 </div>

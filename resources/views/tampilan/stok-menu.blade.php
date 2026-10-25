@@ -56,9 +56,22 @@
                 </a>
 
                 <div class="flex items-center gap-3">
+                    <a href="{{ route('kasir-order-monitor') }}" class="hidden items-center gap-1.5 rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-[#1B1338] transition hover:border-[#C9BFEA] hover:bg-[#F3F0FD] sm:inline-flex">
+                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Order Monitor
+                    </a>
                     <button type="button" class="rounded-full bg-[#7C3AED] px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-[#6D28D9]">
                         Tutup Shift
                     </button>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="rounded-full border border-[#E4DFF3] bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600">
+                            Keluar
+                        </button>
+                    </form>
                     <div class="flex items-center gap-2.5 rounded-full bg-[#F3F0FD] py-1 pl-1 pr-3">
                         <span class="grid h-7 w-7 place-items-center rounded-full bg-[#7C3AED] text-white">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -67,8 +80,8 @@
                             </svg>
                         </span>
                         <span class="hidden text-right leading-tight sm:block">
-                            <span class="block text-xs font-semibold text-[#1B1338]">Siti Nurhaliza</span>
-                            <span class="block text-[10px] text-slate-500">Cashier #02</span>
+                            <span class="block text-xs font-semibold text-[#1B1338]">{{ auth()->user()->name }}</span>
+                            <span class="block text-[10px] text-slate-500">Kasir</span>
                         </span>
                     </div>
                 </div>

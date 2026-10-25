@@ -59,19 +59,20 @@
                     </span>
                 </a>
 
-                <nav class="hidden items-center gap-1 rounded-xl bg-[#F3F0FD] p-1 sm:flex" aria-label="Navigasi owner">
-                    <a href="#" aria-current="page" class="rounded-lg bg-white px-4 py-1.5 text-xs font-semibold text-[#6D28D9] shadow-sm">Ringkasan Laporan</a>
-                    <a href="#" class="rounded-lg px-4 py-1.5 text-xs font-semibold text-slate-600 transition hover:text-[#6D28D9]">Kelola Menu</a>
-                </nav>
-
                 <div class="flex items-center gap-2.5">
                     <span class="hidden text-right leading-tight sm:block">
-                        <span class="block text-xs font-semibold text-[#1B1338]">Owner HQ</span>
-                        <span class="block text-[10px] text-slate-500">owner@hqcoffee.id</span>
+                        <span class="block text-xs font-semibold text-[#1B1338]">{{ auth()->user()->name }}</span>
+                        <span class="block text-[10px] text-slate-500">{{ auth()->user()->email }}</span>
                     </span>
                     <span class="grid h-8 w-8 place-items-center rounded-full bg-[#7C3AED] text-white">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
                     </span>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="rounded-full border border-[#E4DFF3] bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600">
+                            Keluar
+                        </button>
+                    </form>
                 </div>
             </div>
 
